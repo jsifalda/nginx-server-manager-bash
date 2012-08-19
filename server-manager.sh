@@ -4,6 +4,18 @@ htdocs="$HOME/nginx"
 nginxConfDir="/usr/local/etc/nginx/sites-enabled"
 hostsFile="/etc/hosts"
 
+
+function getColor
+{
+	case $1 in
+		"red" )
+			echo "1";;
+		"green" )
+			echo "2";;
+	esac
+
+}
+
 function createDirectory
 {
 	if [[ ! -e $1 ]]; then
@@ -29,11 +41,13 @@ function remove
 
 function writeMessage
 {
-	echo "$1"
-
-	if [[ $2 == true ]]; then
-		exit 1
+	if [[ $2 ]]; then
+		color=$(getColor "$2")
+	else
+		color=$(getColor "green")
 	fi
+
+	echo "$(tput setaf $color) $1 $(tput sgr0)"
 }
 
 function setChmod
