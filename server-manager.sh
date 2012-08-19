@@ -22,11 +22,6 @@ function writeMessage
 	fi
 }
 
-function existCommand
-{
-	type -P $1 &>/dev/null && echo "1" || echo "0"
-}
-
 function setChmod
 {
 	chmod -R $1 $2
@@ -48,12 +43,20 @@ function getConfig
 	}" 
 }
 
-writeMessage "Stop nginx server"
+function isRunning
+{
+	if ps ax | grep -v grep | grep $1 > /dev/null
+	then
+		echo "1"
+	else
+		echo "0"
+	fi
+}
 
-if [ $(existCommand "nginx") = "1" ]; then
+#stop nginx server, if nginx is running
+if [ $(isRunning "nginx") = "1" ]; then
+	writeMessage "Stop nginx server"
 	nginx -s stop
-else
-	writeMessage 'command nginx is not available' true
 fi
 
 #set name of Host name
