@@ -109,7 +109,7 @@ else
 	createDirectory $hostName
 	createDirectory "$hostName/log"
 	createDirectory "$hostName/www"
-	setChmod "777" $hostName
+	setChmod "777" "$htdocs/$hostName"
 
 	writeMessage "Write config to file"
 	echo $(getConfig $hostName) > "$nginxConfDir/$hostName.conf"
