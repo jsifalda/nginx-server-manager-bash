@@ -13,6 +13,20 @@ function createDirectory
 	writeMessage "Dictionary '$1' was created"
 }
 
+function remove
+{
+	if [[ $1 != "" || $1 != "." ]]; then
+
+		if [[ -e $1 ]]; then
+			rm -r $1
+		fi
+
+		writeMessage 'Item '$1' was removed'
+	else
+		writeMessage 'Access denied'
+	fi
+}
+
 function writeMessage
 {
 	echo "$1"
@@ -63,17 +77,32 @@ fi
 echo -n 'Write name of host:'
 read hostName
 
-#create dictionary for host in the htdocs
-createDirectory $hostName
-createDirectory "$hostName/log"
-createDirectory "$hostName/www"
-setChmod "777" $hostName
+if [[ $1 = "-r" ]]; then
+	
+	writeMessage "Removing server files"
+	remove "$htdocs/$hostName"
 
-writeMessage "Write config to file"
-echo $(getConfig $hostName) > "$nginxConfDir/$hostName.conf"
+	writeMessage "Removing server host"
+	remove "$nginxConfDir/$hostName.conf"
 
-writeMessage "Adding host into $hostsFile"
-echo "127.0.0.1 $hostName.lc" >> $hostsFile
+	writeMessage "Removing host from $hostsFile"
+	string="127.0.0.1 $hostName.lc"
+	sed "/$string/d" $hostsFile > 'hosts.temp'
+	mv "hosts.temp" $hostsFile
+
+else
+	#create dictionary for host in the htdocs
+	createDirectory $hostName
+	createDirectory "$hostName/log"
+	createDirectory "$hostName/www"
+	setChmod "777" $hostName
+
+	writeMessage "Write config to file"
+	echo $(getConfig $hostName) > "$nginxConfDir/$hostName.conf"
+
+	writeMessage "Adding host into $hostsFile"
+	echo "127.0.0.1 $hostName.lc" >> $hostsFile	
+fi
 
 writeMessage "Start nginx server"
 nginx
