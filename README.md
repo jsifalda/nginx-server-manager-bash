@@ -2,6 +2,9 @@
 
 Simple manager for creating and removing hosts from nginx site-enabled
 
+##Before start
+**Set variables (htdocs, nginxConfDir, hostsFile) in file __server-manager.sh__ for your configurations'
+
 ##Usage
 
 ###Creating host
