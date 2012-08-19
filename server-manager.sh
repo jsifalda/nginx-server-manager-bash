@@ -22,7 +22,7 @@ function createDirectory
 		mkdir "$htdocs/$1"
 	fi
 
-	writeMessage "Dictionary '$1' was created"
+	writeMessage "Directory '$1' was created"
 }
 
 function remove
