@@ -81,6 +81,11 @@ function isRunning
 	fi
 }
 
+function cloneRepo
+{
+	git clone $1 $2
+}
+
 #stop nginx server, if nginx is running
 if [ $(isRunning "nginx") = "1" ]; then
 	writeMessage "Stop nginx server"
@@ -107,15 +112,22 @@ if [[ $1 = "-r" ]]; then
 else
 	#create dictionary for host in the htdocs
 	createDirectory $hostName
-	createDirectory "$hostName/log"
-	createDirectory "$hostName/www"
+
+	writeMessage "Cloning github repository"
+	if [[ $1 = '-c' && $2 != '' ]]; then
+		cloneRepo $2 "$htdocs/$hostName"
+	fi
+	
+	createDirectory "$htdocs/$hostName/log"
+	createDirectory "$htdocs/$hostName/www"
+
 	setChmod "777" "$htdocs/$hostName"
 
 	writeMessage "Write config to file"
 	echo $(getConfig $hostName) > "$nginxConfDir/$hostName.conf"
 
 	writeMessage "Adding host into $hostsFile"
-	echo "127.0.0.1 $hostName.lc" >> $hostsFile	
+	echo "127.0.0.1 $hostName.lc" >> $hostsFile
 fi
 
 writeMessage "Start nginx server"

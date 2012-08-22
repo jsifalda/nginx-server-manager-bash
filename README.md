@@ -13,6 +13,10 @@ Set variables (htdocs, nginxConfDir, hostsFile) in file __server-manager.sh__ fo
 
 	sudo <path-to-project>/server-manager.sh
 
+####Creating host with cloned repository
+
+	sudo <path-to-project>/server-manager.sh -c <git-repo>
+
 ###Removing host
 
 	sudo <path-to-project>/server-manager.sh -r
