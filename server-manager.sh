@@ -18,8 +18,8 @@ function getColor
 
 function createDirectory
 {
-	if [[ ! -e "$htdocs/$1" ]]; then
-		mkdir "$htdocs/$1"
+	if [[ ! -e $1 ]]; then
+		mkdir $1
 	fi
 
 	writeMessage "Directory '$1' was created"
