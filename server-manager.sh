@@ -19,7 +19,7 @@ function getColor
 function createDirectory
 {
 	if [[ ! -e $1 ]]; then
-		mkdir $1
+		mkdir -p $1
 	fi
 
 	writeMessage "Directory '$1' was created"
