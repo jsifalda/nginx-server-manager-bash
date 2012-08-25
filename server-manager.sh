@@ -113,8 +113,8 @@ else
 	#create dictionary for host in the htdocs
 	createDirectory $hostName
 
-	writeMessage "Cloning github repository"
 	if [[ $1 = '-c' && $2 != '' ]]; then
+		writeMessage "Cloning github repository"
 		cloneRepo $2 "$htdocs/$hostName"
 	fi
 	
