@@ -20,9 +20,10 @@ function createDirectory
 {
 	if [[ ! -e $1 ]]; then
 		mkdir -p $1
+		writeMessage "Directory '$1' was created"
+	else
+		writeMessage "Directory '$1' exists"
 	fi
-
-	writeMessage "Directory '$1' was created"
 }
 
 function remove
