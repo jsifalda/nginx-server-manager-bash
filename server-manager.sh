@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-htdocs="$HOME/nginx"
+htdocs=$PWD
 nginxConfDir="/usr/local/etc/nginx/sites-enabled"
 hostsFile="/etc/hosts"
 
