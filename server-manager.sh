@@ -69,7 +69,7 @@ function getConfig
 		include common/common.conf; \\r
 		include common/php.conf; \\r
 		include common/nette.conf; \\r
-	}" 
+	}"
 }
 
 function isRunning
@@ -97,38 +97,43 @@ fi
 echo -n 'Write name of host:'
 read hostName
 
-if [[ $1 = "-r" ]]; then
-	
-	writeMessage "Removing server files"
-	remove "$htdocs/$hostName"
-
-	writeMessage "Removing server host"
-	remove "$nginxConfDir/$hostName.conf"
-
-	writeMessage "Removing host from $hostsFile"
-	string="127.0.0.1 $hostName.lc"
-	sed "/$string/d" $hostsFile > 'hosts.temp'
-	mv "hosts.temp" $hostsFile
-
+if [ -z "$hostName" ]; then
+	writeMessage "Host name may not be empty!" "red"
 else
-	#create dictionary for host in the htdocs
-	createDirectory $hostName
 
-	if [[ $1 = '-c' && $2 != '' ]]; then
-		writeMessage "Cloning github repository"
-		cloneRepo $2 "$htdocs/$hostName"
+	if [[ $1 = "-r" ]]; then
+
+		writeMessage "Removing server files"
+		remove "$htdocs/$hostName"
+
+		writeMessage "Removing server host"
+		remove "$nginxConfDir/$hostName.conf"
+
+		writeMessage "Removing host from $hostsFile"
+		string="127.0.0.1 $hostName.lc"
+		sed "/$string/d" $hostsFile > 'hosts.temp'
+		mv "hosts.temp" $hostsFile
+
+	else
+		#create dictionary for host in the htdocs
+		createDirectory $hostName
+
+		if [[ $1 = '-c' && $2 != '' ]]; then
+			writeMessage "Cloning github repository"
+			cloneRepo $2 "$htdocs/$hostName"
+		fi
+
+		createDirectory "$htdocs/$hostName/log"
+		createDirectory "$htdocs/$hostName/www"
+
+		setChmod "777" "$htdocs/$hostName"
+
+		writeMessage "Write config to file"
+		echo $(getConfig $hostName) > "$nginxConfDir/$hostName.conf"
+
+		writeMessage "Adding host into $hostsFile"
+		echo "127.0.0.1 $hostName.lc" >> $hostsFile
 	fi
-	
-	createDirectory "$htdocs/$hostName/log"
-	createDirectory "$htdocs/$hostName/www"
-
-	setChmod "777" "$htdocs/$hostName"
-
-	writeMessage "Write config to file"
-	echo $(getConfig $hostName) > "$nginxConfDir/$hostName.conf"
-
-	writeMessage "Adding host into $hostsFile"
-	echo "127.0.0.1 $hostName.lc" >> $hostsFile
 fi
 
 writeMessage "Start nginx server"
