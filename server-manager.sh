@@ -115,8 +115,6 @@ else
 		mv "hosts.temp" $hostsFile
 
 	else
-		#create dictionary for host in the htdocs
-		createDirectory $hostName
 
 		if [[ $1 = '-c' && $2 != '' ]]; then
 			writeMessage "Cloning github repository"
